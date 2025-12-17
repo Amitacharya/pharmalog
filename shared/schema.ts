@@ -128,3 +128,69 @@ export const insertPMScheduleSchema = createInsertSchema(pmSchedules).omit({
 
 export type InsertPMSchedule = z.infer<typeof insertPMScheduleSchema>;
 export type PMSchedule = typeof pmSchedules.$inferSelect;
+
+// System Configuration Table (for customer branding)
+export const systemConfig = pgTable("system_config", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  key: text("key").notNull().unique(),
+  value: text("value"),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  updatedBy: varchar("updated_by").references(() => users.id),
+});
+
+export const insertSystemConfigSchema = createInsertSchema(systemConfig).omit({
+  id: true,
+  updatedAt: true,
+});
+
+export type InsertSystemConfig = z.infer<typeof insertSystemConfigSchema>;
+export type SystemConfig = typeof systemConfig.$inferSelect;
+
+// Notification Priority Enum
+export const notificationPriorityEnum = pgEnum("notification_priority", ["Low", "Medium", "High", "Critical"]);
+export const notificationStatusEnum = pgEnum("notification_status", ["Unread", "Read", "Dismissed"]);
+
+// Notifications Table
+export const notifications = pgTable("notifications", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => users.id), // null = broadcast to all
+  title: text("title").notNull(),
+  message: text("message").notNull(),
+  priority: notificationPriorityEnum("priority").notNull().default("Medium"),
+  status: notificationStatusEnum("status").notNull().default("Unread"),
+  entityType: text("entity_type"), // Equipment, LogEntry, PM, etc.
+  entityId: text("entity_id"),
+  emailSent: boolean("email_sent").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  readAt: timestamp("read_at"),
+});
+
+export const insertNotificationSchema = createInsertSchema(notifications).omit({
+  id: true,
+  createdAt: true,
+  readAt: true,
+});
+
+export type InsertNotification = z.infer<typeof insertNotificationSchema>;
+export type Notification = typeof notifications.$inferSelect;
+
+// Email Configuration Table
+export const emailConfig = pgTable("email_config", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  smtpHost: text("smtp_host"),
+  smtpPort: integer("smtp_port"),
+  smtpUser: text("smtp_user"),
+  smtpPassword: text("smtp_password"),
+  fromEmail: text("from_email"),
+  fromName: text("from_name"),
+  isEnabled: boolean("is_enabled").notNull().default(false),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const insertEmailConfigSchema = createInsertSchema(emailConfig).omit({
+  id: true,
+  updatedAt: true,
+});
+
+export type InsertEmailConfig = z.infer<typeof insertEmailConfigSchema>;
+export type EmailConfig = typeof emailConfig.$inferSelect;

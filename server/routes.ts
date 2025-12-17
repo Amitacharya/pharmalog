@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import session from "express-session";
 import bcrypt from "bcrypt";
-import { insertUserSchema, insertEquipmentSchema, insertLogEntrySchema, insertAuditTrailSchema, insertPMScheduleSchema } from "@shared/schema";
+import { insertUserSchema, insertEquipmentSchema, insertLogEntrySchema, insertAuditTrailSchema, insertPMScheduleSchema, insertNotificationSchema, insertEmailConfigSchema } from "@shared/schema";
 import { z } from "zod";
 
 // Extend Express session
@@ -674,6 +674,206 @@ export async function registerRoutes(
         return res.status(400).json({ error: error.errors });
       }
       res.status(500).json({ error: "Failed to update user" });
+    }
+  });
+
+  // ===== SYSTEM CONFIGURATION ROUTES =====
+
+  // Get all system config (public - for branding display)
+  app.get("/api/config", async (req, res) => {
+    try {
+      const configs = await storage.getAllSystemConfig();
+      const configMap: Record<string, string | null> = {};
+      configs.forEach(c => { configMap[c.key] = c.value; });
+      res.json(configMap);
+    } catch (error) {
+      console.error("Get config error:", error);
+      res.status(500).json({ error: "Failed to fetch configuration" });
+    }
+  });
+
+  // Update system config (Admin only)
+  app.post("/api/config", requireAuth, async (req, res) => {
+    try {
+      const currentUser = await storage.getUser(req.session.userId!);
+      if (currentUser?.role !== "Admin") {
+        return res.status(403).json({ error: "Only Admin can update system configuration" });
+      }
+
+      const { key, value } = req.body;
+      if (!key) {
+        return res.status(400).json({ error: "Configuration key is required" });
+      }
+
+      const config = await storage.setSystemConfig(key, value, req.session.userId);
+
+      await logAudit(
+        req.session.userId!,
+        "UPDATE",
+        "SystemConfig",
+        key,
+        undefined,
+        { key, value }
+      );
+
+      res.json(config);
+    } catch (error) {
+      console.error("Update config error:", error);
+      res.status(500).json({ error: "Failed to update configuration" });
+    }
+  });
+
+  // Bulk update system config (Admin only)
+  app.post("/api/config/bulk", requireAuth, async (req, res) => {
+    try {
+      const currentUser = await storage.getUser(req.session.userId!);
+      if (currentUser?.role !== "Admin") {
+        return res.status(403).json({ error: "Only Admin can update system configuration" });
+      }
+
+      const configs = req.body as Record<string, string | null>;
+      const results = [];
+
+      for (const [key, value] of Object.entries(configs)) {
+        const config = await storage.setSystemConfig(key, value, req.session.userId);
+        results.push(config);
+      }
+
+      await logAudit(
+        req.session.userId!,
+        "UPDATE",
+        "SystemConfig",
+        "bulk",
+        undefined,
+        configs
+      );
+
+      res.json(results);
+    } catch (error) {
+      console.error("Bulk update config error:", error);
+      res.status(500).json({ error: "Failed to update configuration" });
+    }
+  });
+
+  // ===== NOTIFICATION ROUTES =====
+
+  // Get notifications for current user
+  app.get("/api/notifications", requireAuth, async (req, res) => {
+    try {
+      const notifications = await storage.getAllNotifications(req.session.userId);
+      res.json(notifications);
+    } catch (error) {
+      console.error("Get notifications error:", error);
+      res.status(500).json({ error: "Failed to fetch notifications" });
+    }
+  });
+
+  // Get unread notification count
+  app.get("/api/notifications/unread", requireAuth, async (req, res) => {
+    try {
+      const notifications = await storage.getUnreadNotifications(req.session.userId);
+      res.json({ count: notifications.length, notifications });
+    } catch (error) {
+      console.error("Get unread notifications error:", error);
+      res.status(500).json({ error: "Failed to fetch notifications" });
+    }
+  });
+
+  // Create notification (Admin only - for testing/manual alerts)
+  app.post("/api/notifications", requireAuth, async (req, res) => {
+    try {
+      const currentUser = await storage.getUser(req.session.userId!);
+      if (currentUser?.role !== "Admin") {
+        return res.status(403).json({ error: "Only Admin can create notifications" });
+      }
+
+      const validatedData = insertNotificationSchema.parse(req.body);
+      const notification = await storage.createNotification(validatedData);
+      res.status(201).json(notification);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: error.errors });
+      }
+      console.error("Create notification error:", error);
+      res.status(500).json({ error: "Failed to create notification" });
+    }
+  });
+
+  // Mark notification as read
+  app.patch("/api/notifications/:id/read", requireAuth, async (req, res) => {
+    try {
+      const notification = await storage.markNotificationRead(req.params.id);
+      if (!notification) {
+        return res.status(404).json({ error: "Notification not found" });
+      }
+      res.json(notification);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to mark notification as read" });
+    }
+  });
+
+  // Mark all notifications as read
+  app.post("/api/notifications/read-all", requireAuth, async (req, res) => {
+    try {
+      await storage.markAllNotificationsRead(req.session.userId!);
+      res.json({ message: "All notifications marked as read" });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to mark notifications as read" });
+    }
+  });
+
+  // ===== EMAIL CONFIGURATION ROUTES =====
+
+  // Get email config (Admin only)
+  app.get("/api/email-config", requireAuth, async (req, res) => {
+    try {
+      const currentUser = await storage.getUser(req.session.userId!);
+      if (currentUser?.role !== "Admin") {
+        return res.status(403).json({ error: "Only Admin can view email configuration" });
+      }
+
+      const config = await storage.getEmailConfig();
+      // Don't return SMTP password
+      if (config) {
+        const { smtpPassword, ...safeConfig } = config;
+        res.json({ ...safeConfig, smtpPassword: smtpPassword ? "********" : null });
+      } else {
+        res.json(null);
+      }
+    } catch (error) {
+      console.error("Get email config error:", error);
+      res.status(500).json({ error: "Failed to fetch email configuration" });
+    }
+  });
+
+  // Update email config (Admin only)
+  app.post("/api/email-config", requireAuth, async (req, res) => {
+    try {
+      const currentUser = await storage.getUser(req.session.userId!);
+      if (currentUser?.role !== "Admin") {
+        return res.status(403).json({ error: "Only Admin can update email configuration" });
+      }
+
+      const updates = insertEmailConfigSchema.partial().parse(req.body);
+      const config = await storage.updateEmailConfig(updates);
+
+      await logAudit(
+        req.session.userId!,
+        "UPDATE",
+        "EmailConfig",
+        config.id,
+        undefined,
+        { ...updates, smtpPassword: updates.smtpPassword ? "[REDACTED]" : undefined }
+      );
+
+      const { smtpPassword, ...safeConfig } = config;
+      res.json({ ...safeConfig, smtpPassword: smtpPassword ? "********" : null });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: error.errors });
+      }
+      console.error("Update email config error:", error);
+      res.status(500).json({ error: "Failed to update email configuration" });
     }
   });
 

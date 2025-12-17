@@ -14,6 +14,7 @@ import AuditTrail from "@/pages/AuditTrail";
 import PreventiveMaintenance from "@/pages/PreventiveMaintenance";
 import Reports from "@/pages/Reports";
 import UserManagement from "@/pages/UserManagement";
+import AdminConfiguration from "@/pages/AdminConfiguration";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
   const { user, isLoading } = useAuth();
@@ -48,6 +49,7 @@ function AppRoutes() {
         <Route path="/reports" component={Reports} />
         <Route path="/users" component={UserManagement} />
         <Route path="/audit" component={AuditTrail} />
+        <Route path="/admin" component={AdminConfiguration} />
         <Route component={NotFound} />
       </Switch>
     </AppLayout>

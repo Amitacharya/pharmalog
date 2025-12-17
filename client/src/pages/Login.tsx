@@ -78,9 +78,6 @@ export default function Login() {
           <p className="text-sm text-slate-500">
             GAMP-5 Validated | ALCOA+ Principles | Data Integrity Assured
           </p>
-          <p className="text-sm text-slate-400">
-            Powered by <span className="text-blue-400 font-medium">Acharya Infosystems LLP</span>
-          </p>
         </div>
       </div>
 
@@ -166,7 +163,7 @@ export default function Login() {
             <p className="text-xs text-slate-400">
               21 CFR Part 11 Compliant | Audit Trail Enabled
             </p>
-            <p className="text-xs text-slate-500 lg:hidden mt-4">
+            <p className="text-xs text-slate-500 mt-4">
               Powered by <span className="text-blue-600 font-medium">Acharya Infosystems LLP</span>
             </p>
           </div>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import { 
   LayoutDashboard, 
   FileText, 
@@ -57,12 +58,22 @@ const navItems: NavItem[] = [
   { icon: FileBarChart, label: "Reports", href: "/reports" },
   { icon: Users, label: "User Management", href: "/users", roles: ["Admin", "QA"] },
   { icon: Activity, label: "Audit Trail", href: "/audit", roles: ["Admin", "QA", "Supervisor"] },
+  { icon: Settings, label: "Admin Settings", href: "/admin", roles: ["Admin"] },
 ];
+
+interface SystemConfig {
+  customer_company_name?: string | null;
+  customer_logo_url?: string | null;
+}
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const { user, logout } = useAuth();
   const { toast } = useToast();
+  
+  const { data: systemConfig } = useQuery<SystemConfig>({
+    queryKey: ["/api/config"],
+  });
   
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const [passwordData, setPasswordData] = useState({ current: "", new: "", confirm: "" });
@@ -350,8 +361,18 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
         <footer className="border-t bg-white px-6 py-3">
           <div className="flex items-center justify-between text-xs text-slate-500">
-            <span>PharmaLog v2.4.1 • 21 CFR Part 11 Compliant</span>
-            <span>Audit Trail Enabled • All actions are logged</span>
+            <div className="flex items-center gap-2">
+              {systemConfig?.customer_company_name && (
+                <>
+                  <span className="font-medium text-slate-700">{systemConfig.customer_company_name}</span>
+                  <span className="text-slate-300">•</span>
+                </>
+              )}
+              <span>PharmaLog v2.4.1 • 21 CFR Part 11 Compliant</span>
+            </div>
+            <span className="text-slate-400">
+              Powered by <span className="text-blue-600 font-medium">Acharya Infosystems LLP</span>
+            </span>
           </div>
         </footer>
       </div>
