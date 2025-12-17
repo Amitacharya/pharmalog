@@ -18,7 +18,11 @@ import {
   ShieldCheck,
   KeyRound,
   Clock,
-  AlertTriangle
+  AlertTriangle,
+  ChevronLeft,
+  ChevronRight,
+  PanelLeftClose,
+  PanelLeft
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -36,6 +40,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 import logo from "@assets/generated_images/minimalist_pharma_logo_symbol.png";
@@ -74,12 +79,19 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const { data: systemConfig } = useQuery<SystemConfig>({
     queryKey: ["/api/config"],
   });
-  
+
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const [passwordData, setPasswordData] = useState({ current: "", new: "", confirm: "" });
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [sessionTimeLeft, setSessionTimeLeft] = useState(SESSION_TIMEOUT);
   const [lastActivity, setLastActivity] = useState(Date.now());
+
+  // Update page title dynamically
+  useEffect(() => {
+    const currentPage = navItems.find((i) => i.href === location)?.label || "Dashboard";
+    document.title = `${currentPage} | PharmaLog`;
+  }, [location]);
 
   // Session timeout logic
   useEffect(() => {
@@ -209,88 +221,149 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const SidebarContent = () => (
+  const SidebarContent = ({ collapsed = false }: { collapsed?: boolean }) => (
     <div className="flex h-full flex-col gap-0 bg-gradient-to-b from-slate-900 to-slate-950 text-slate-100">
-      <div className="flex h-16 items-center border-b border-slate-800/50 px-6">
-        <Link href="/" className="flex items-center gap-3 font-display font-bold text-xl tracking-tight">
-          <div className="bg-gradient-to-br from-blue-500 to-blue-700 p-1.5 rounded-lg shadow-lg shadow-blue-500/20">
-             <img src={logo} alt="PharmaLog" className="h-5 w-5 brightness-0 invert" />
+      <div className={cn(
+        "flex h-16 items-center border-b border-slate-800/50",
+        collapsed ? "justify-center px-2" : "px-4"
+      )}>
+        <Link href="/" className={cn(
+          "flex items-center gap-3 font-display font-bold tracking-tight",
+          collapsed ? "justify-center" : ""
+        )}>
+          <div className="bg-gradient-to-br from-blue-500 to-blue-700 p-1.5 rounded-lg shadow-lg shadow-blue-500/20 flex-shrink-0">
+            <img src={logo} alt="PharmaLog" className="h-5 w-5 brightness-0 invert" />
           </div>
-          <span className="text-white">Pharma<span className="text-blue-400">Log</span></span>
+          {!collapsed && (
+            <span className="text-lg text-white">Pharma<span className="text-blue-400">Log</span></span>
+          )}
         </Link>
       </div>
       
-      <div className="px-4 py-6 flex-1">
-        <div className="mb-3 px-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">
-          Core Modules
-        </div>
-        <nav className="flex flex-col gap-0.5">
+      <div className={cn("py-6 flex-1", collapsed ? "px-2" : "px-3")}>
+        {!collapsed && (
+          <div className="mb-3 px-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+            Core Modules
+          </div>
+        )}
+        <nav className="flex flex-col gap-1">
           {filteredNavItems.map((item) => (
-            <Link key={item.href} href={item.href}>
-              <div
-                className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
-                  location === item.href
-                    ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/25"
-                    : "text-slate-400 hover:bg-slate-800/70 hover:text-slate-100"
-                )}
-              >
-                <item.icon className="h-4 w-4" />
-                {item.label}
-              </div>
-            </Link>
+            <Tooltip key={item.href} delayDuration={0}>
+              <TooltipTrigger asChild>
+                <Link href={item.href}>
+                  <div
+                    className={cn(
+                      "flex items-center rounded-lg text-sm font-medium transition-all duration-200",
+                      collapsed ? "justify-center p-2.5" : "gap-3 px-3 py-2.5",
+                      location === item.href
+                        ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/25"
+                        : "text-slate-400 hover:bg-slate-800/70 hover:text-slate-100"
+                    )}
+                  >
+                    <item.icon className={cn("flex-shrink-0", collapsed ? "h-5 w-5" : "h-4 w-4")} />
+                    {!collapsed && item.label}
+                  </div>
+                </Link>
+              </TooltipTrigger>
+              {collapsed && (
+                <TooltipContent side="right" className="bg-slate-800 text-white border-slate-700">
+                  {item.label}
+                </TooltipContent>
+              )}
+            </Tooltip>
           ))}
         </nav>
       </div>
 
-      <div className="border-t border-slate-800/50 p-4">
-        <div className="rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-800/40 p-3 ring-1 ring-slate-700/50 backdrop-blur">
-          <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10 border-2 border-slate-600 shadow-lg">
-              <AvatarFallback className="bg-gradient-to-br from-blue-600 to-blue-800 text-white font-semibold">
-                {user ? getInitials(user.fullName) : "U"}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col overflow-hidden flex-1">
-              <span className="truncate text-sm font-semibold text-white">
-                {user?.fullName || "User"}
-              </span>
-              <Badge variant="outline" className={cn("text-[10px] w-fit mt-0.5", getRoleBadgeColor(user?.role || ""))}>
-                {user?.role || "User"}
-              </Badge>
+      {!collapsed && (
+        <div className="border-t border-slate-800/50 p-3">
+          <div className="rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-800/40 p-3 ring-1 ring-slate-700/50 backdrop-blur">
+            <div className="flex items-center gap-3">
+              <Avatar className="h-9 w-9 border-2 border-slate-600 shadow-lg flex-shrink-0">
+                <AvatarFallback className="bg-gradient-to-br from-blue-600 to-blue-800 text-white font-semibold text-sm">
+                  {user ? getInitials(user.fullName) : "U"}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col overflow-hidden flex-1 min-w-0">
+                <span className="truncate text-sm font-semibold text-white">
+                  {user?.fullName || "User"}
+                </span>
+                <Badge variant="outline" className={cn("text-[10px] w-fit mt-0.5", getRoleBadgeColor(user?.role || ""))}>
+                  {user?.role || "User"}
+                </Badge>
+              </div>
             </div>
-          </div>
-          <div className="mt-3 pt-3 border-t border-slate-700/50">
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-400">Session</span>
-              <div className={cn(
-                "flex items-center gap-1 font-mono",
-                sessionTimeLeft <= WARNING_THRESHOLD ? "text-amber-400" : "text-emerald-400"
-              )}>
-                <Clock className="h-3 w-3" />
-                {formatTimeLeft(sessionTimeLeft)}
+            <div className="mt-3 pt-3 border-t border-slate-700/50">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-slate-400">Session</span>
+                <div className={cn(
+                  "flex items-center gap-1 font-mono",
+                  sessionTimeLeft <= WARNING_THRESHOLD ? "text-amber-400" : "text-emerald-400"
+                )}>
+                  <Clock className="h-3 w-3" />
+                  {formatTimeLeft(sessionTimeLeft)}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {collapsed && (
+        <div className="border-t border-slate-800/50 p-2">
+          <Tooltip delayDuration={0}>
+            <TooltipTrigger asChild>
+              <div className="flex justify-center">
+                <Avatar className="h-8 w-8 border-2 border-slate-600">
+                  <AvatarFallback className="bg-gradient-to-br from-blue-600 to-blue-800 text-white font-semibold text-xs">
+                    {user ? getInitials(user.fullName) : "U"}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="bg-slate-800 text-white border-slate-700">
+              <p className="font-semibold">{user?.fullName}</p>
+              <p className="text-xs text-slate-400">{user?.role}</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      )}
     </div>
   );
 
   return (
     <div className="min-h-screen bg-slate-100 flex font-sans">
       {/* Desktop Sidebar */}
-      <aside className="hidden w-64 lg:block fixed h-full z-30 shadow-2xl">
-        <SidebarContent />
+      <aside className={cn(
+        "hidden lg:block fixed h-full z-30 shadow-2xl transition-all duration-300 ease-in-out",
+        sidebarCollapsed ? "w-16" : "w-64"
+      )}>
+        <SidebarContent collapsed={sidebarCollapsed} />
+        
+        {/* Collapse Toggle Button */}
+        <button
+          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+          className="absolute -right-3 top-20 z-40 flex h-6 w-6 items-center justify-center rounded-full bg-slate-800 text-white shadow-lg hover:bg-slate-700 transition-colors border border-slate-600"
+          data-testid="button-toggle-sidebar"
+        >
+          {sidebarCollapsed ? (
+            <ChevronRight className="h-3 w-3" />
+          ) : (
+            <ChevronLeft className="h-3 w-3" />
+          )}
+        </button>
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col lg:ml-64 min-h-screen transition-all">
-        <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b bg-white/95 backdrop-blur-sm px-6 shadow-sm">
-          <div className="flex items-center gap-4">
+      <div className={cn(
+        "flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out",
+        sidebarCollapsed ? "lg:ml-16" : "lg:ml-64"
+      )}>
+        <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b bg-white/95 backdrop-blur-sm px-4 lg:px-6 shadow-sm">
+          <div className="flex items-center gap-3">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="lg:hidden text-slate-600">
+                <Button variant="ghost" size="icon" className="lg:hidden text-slate-600 h-8 w-8">
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Toggle navigation menu</span>
                 </Button>
@@ -299,36 +372,48 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 <SidebarContent />
               </SheetContent>
             </Sheet>
+            
+            {/* Desktop hamburger for sidebar toggle */}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="hidden lg:flex text-slate-600 h-8 w-8"
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              data-testid="button-hamburger-menu"
+            >
+              {sidebarCollapsed ? <PanelLeft className="h-5 w-5" /> : <PanelLeftClose className="h-5 w-5" />}
+            </Button>
+            
             <div className="flex flex-col">
-              <h1 className="text-lg font-bold text-slate-900 leading-tight">
+              <h1 className="text-base font-bold text-slate-900 leading-tight">
                 {navItems.find((i) => i.href === location)?.label || "Dashboard"}
               </h1>
-              <span className="text-xs text-slate-500 hidden md:block">
-                GMP Compliant Electronic Logbook System
+              <span className="text-[11px] text-slate-500 hidden sm:block">
+                {systemConfig?.customer_company_name || "GMP Compliant Electronic Logbook"}
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="hidden md:flex items-center gap-3 mr-2">
-              <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 font-medium">
+          <div className="flex items-center gap-2">
+            <div className="hidden md:flex items-center gap-2 mr-2">
+              <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 font-medium text-[11px]">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse" />
-                System Active
+                Active
               </Badge>
-              <span className="text-xs font-mono text-slate-400 bg-slate-100 px-2 py-1 rounded">
-                {new Date().toLocaleDateString("en-US", { weekday: 'short', month: 'short', day: 'numeric' })}
+              <span className="text-[11px] font-mono text-slate-400 bg-slate-100 px-2 py-0.5 rounded">
+                {new Date().toLocaleDateString("en-US", { month: 'short', day: 'numeric' })}
               </span>
             </div>
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2 border-slate-200 hover:bg-slate-50" data-testid="button-user-menu">
-                  <Avatar className="h-6 w-6">
-                    <AvatarFallback className="bg-blue-600 text-white text-xs">
+                <Button variant="outline" size="sm" className="gap-2 border-slate-200 hover:bg-slate-50 h-8" data-testid="button-user-menu">
+                  <Avatar className="h-5 w-5">
+                    <AvatarFallback className="bg-blue-600 text-white text-[10px]">
                       {user ? getInitials(user.fullName) : "U"}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="hidden sm:inline font-medium">{user?.username}</span>
+                  <span className="hidden sm:inline font-medium text-xs">{user?.username}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
@@ -353,14 +438,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
         
-        <main className="flex-1 p-6 lg:p-8 bg-gradient-to-br from-slate-100 to-slate-50">
+        <main className="flex-1 p-4 lg:p-6 bg-gradient-to-br from-slate-100 to-slate-50">
           <div className="mx-auto max-w-7xl animate-in fade-in slide-in-from-bottom-2 duration-500">
             {children}
           </div>
         </main>
 
-        <footer className="border-t bg-white px-6 py-3">
-          <div className="flex items-center justify-between text-xs text-slate-500">
+        <footer className="border-t bg-white px-4 lg:px-6 py-2">
+          <div className="flex items-center justify-between text-[11px] text-slate-500">
             <div className="flex items-center gap-2">
               {systemConfig?.customer_company_name && (
                 <>
@@ -368,7 +453,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                   <span className="text-slate-300">•</span>
                 </>
               )}
-              <span>PharmaLog v2.4.1 • 21 CFR Part 11 Compliant</span>
+              <span>PharmaLog v2.4.1 • 21 CFR Part 11</span>
             </div>
             <span className="text-slate-400">
               Powered by <span className="text-blue-600 font-medium">Acharya Infosystems LLP</span>
