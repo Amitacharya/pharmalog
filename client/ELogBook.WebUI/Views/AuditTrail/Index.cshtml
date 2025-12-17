@@ -1,0 +1,87 @@
+@{
+    ViewData["Title"] = "Audit Trail";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="h4 mb-1">Audit Trail</h2>
+        <p class="text-muted small mb-0">Immutable record of system activities (21 CFR Part 11)</p>
+    </div>
+    <button class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-download"></i> Export Log
+    </button>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header bg-white py-3">
+        <div class="row g-2">
+            <div class="col-md-3">
+                <input type="date" class="form-control form-control-sm">
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control form-control-sm" placeholder="Search by User or Action...">
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-sm btn-secondary w-100">Filter</button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle mb-0 font-monospace" style="font-size: 0.9em;">
+                <thead class="bg-light">
+                    <tr>
+                        <th>Date (UTC)</th>
+                        <th>User</th>
+                        <th>Action</th>
+                        <th>Entity</th>
+                        <th>Old Value</th>
+                        <th>New Value</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2023-10-24 14:30:22</td>
+                        <td>john.doe</td>
+                        <td><span class="badge bg-success">CREATE</span></td>
+                        <td>LogEntry (ID: 882)</td>
+                        <td>-</td>
+                        <td>{Status: 'Draft'}</td>
+                        <td>Initial Entry</td>
+                    </tr>
+                    <tr>
+                        <td>2023-10-24 14:35:10</td>
+                        <td>john.doe</td>
+                        <td><span class="badge bg-primary">UPDATE</span></td>
+                        <td>LogEntry (ID: 882)</td>
+                        <td>Status: 'Draft'</td>
+                        <td>Status: 'Submitted'</td>
+                        <td>Submission for review</td>
+                    </tr>
+                    <tr>
+                        <td>2023-10-24 15:00:05</td>
+                        <td>sarah.smith</td>
+                        <td><span class="badge bg-info">APPROVE</span></td>
+                        <td>LogEntry (ID: 882)</td>
+                        <td>Status: 'Submitted'</td>
+                        <td>Status: 'Approved'</td>
+                        <td>QA Approval</td>
+                    </tr>
+                    <tr>
+                        <td>2023-10-24 16:10:45</td>
+                        <td>admin</td>
+                        <td><span class="badge bg-warning text-dark">LOGIN</span></td>
+                        <td>Session</td>
+                        <td>-</td>
+                        <td>Success</td>
+                        <td>User Login</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer bg-white text-muted small">
+        Showing 4 of 1,204 records
+    </div>
+</div>

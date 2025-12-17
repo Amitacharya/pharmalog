@@ -1,0 +1,51 @@
+@* 
+    _Sidebar.cshtml
+    Partial view for the application sidebar navigation
+*@
+
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <h4 class="mb-0"><i class="bi bi-capsule"></i> PharmaLog</h4>
+        <small class="text-muted">GMP E-Log System</small>
+    </div>
+
+    <ul class="list-unstyled components">
+        <li>
+            <a href="/Dashboard/Index" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+        </li>
+        <li>
+            <a href="/LogBook/Index" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "LogBook" ? "active" : "")">
+                <i class="bi bi-journal-text"></i> E-Log Book
+            </a>
+        </li>
+        <li>
+            <a href="/Equipment/Index" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Equipment" ? "active" : "")">
+                <i class="bi bi-hdd-rack"></i> Equipment Master
+            </a>
+        </li>
+        <li>
+            <a href="/AuditTrail/Index" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "AuditTrail" ? "active" : "")">
+                <i class="bi bi-shield-check"></i> Audit Trail
+            </a>
+        </li>
+        <li>
+            <a href="/Reports/Index" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Reports" ? "active" : "")">
+                <i class="bi bi-file-earmark-bar-graph"></i> Reports
+            </a>
+        </li>
+    </ul>
+
+    <div class="p-3 mt-auto">
+        <div class="card bg-dark border-secondary text-white">
+            <div class="card-body p-2">
+                <small class="d-block text-muted">System Status</small>
+                <div class="d-flex align-items-center mt-1">
+                    <span class="badge bg-success me-2">Online</span>
+                    <small>v1.0.0</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

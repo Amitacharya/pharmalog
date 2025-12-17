@@ -1,0 +1,56 @@
+@{
+    Layout = null;
+    ViewData["Title"] = "Login";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Pharma E-Log Book</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="login-page">
+        <div class="login-box">
+            <div class="brand-logo">
+                <h2>💊 PharmaLog</h2>
+                <p class="text-muted">Secure GMP Access</p>
+            </div>
+
+            <form onsubmit="handleLogin(event)">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" placeholder="Enter your ID" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter password" required>
+                </div>
+                
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="rememberMe">
+                    <label class="form-check-label text-muted small" for="rememberMe">Remember me</label>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                </div>
+
+                <div class="text-center mt-3">
+                    <a href="#" class="text-muted small text-decoration-none">Forgot password?</a>
+                </div>
+
+                <div class="alert alert-info mt-4 small mb-0">
+                    <i class="bi bi-shield-lock"></i> 
+                    System access is monitored and logged in accordance with 21 CFR Part 11.
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="~/js/site.js"></script>
+</body>
+</html>

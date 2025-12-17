@@ -1,0 +1,368 @@
+🎯 Project Title
+
+Pharma E-Log Book & Equipment Activity Management System
+
+🧩 Objective
+
+Design and develop a pharma-compliant, web-based E-Log Book system that replaces manual logbooks used in pharmaceutical manufacturing plants.
+The system must support electronic activity logging, equipment master management, audit trails, preventive maintenance, and compliance reporting aligned with 21 CFR Part 11, GAMP-5, and ALCOA+ principles.
+
+This application will be server-hosted and accessed via web browsers on local client machines.
+
+🏗️ Overall Architecture
+
+Build a secure, scalable, modular web application using clean architecture and role-based access control.
+
+Architecture Layers
+
+Frontend (Web UI)
+
+Backend (API & Business Logic)
+
+Database
+
+Authentication & Authorization
+
+Audit & Compliance Layer
+
+🛠️ Recommended Technology Stack
+Backend
+
+ASP.NET Core (.NET 8 LTS or .NET 7 if 8 unavailable)
+
+RESTful Web API
+
+Entity Framework Core
+
+JWT Authentication + Refresh Tokens
+
+Serilog for audit logging
+
+Frontend
+
+React + TypeScript
+
+Material UI (MUI) or Bootstrap 5
+
+Form validation with controlled components
+
+Role-aware UI rendering
+
+(If simpler MVP is needed, use Razor Pages or Blazor Server)
+
+Database
+
+SQL Server
+
+Tables with immutable audit records
+
+Time stored in UTC
+
+Soft deletes (IsDeleted flag)
+
+Hosting / Deployment
+
+Windows Server / Azure VM / On-Prem Server
+
+IIS or Kestrel
+
+HTTPS enforced
+
+Daily database backup strategy
+
+🔐 Security & Compliance Requirements
+Authentication
+
+Username + Password
+
+Password policy (min length, expiry, history)
+
+Optional 2FA (future ready)
+
+Account lockout after failed attempts
+
+Authorization
+
+Role-Based Access Control (RBAC)
+
+Roles:
+
+Operator
+
+Supervisor
+
+QA
+
+Engineer
+
+Admin
+
+21 CFR Part 11 Compliance
+
+Secure login
+
+Electronic signatures (username + password + reason)
+
+Audit trails (who, what, when, old value, new value)
+
+No overwrite of records
+
+Time-stamped entries
+
+Controlled system access
+
+📦 Core Functional Modules
+1️⃣ User & Role Management
+
+Create/edit users
+
+Assign roles
+
+Activate/deactivate users
+
+Password reset
+
+Force password change on first login
+
+2️⃣ Equipment Master
+
+Equipment ID
+
+Equipment Name
+
+Equipment Type
+
+Location / Area
+
+Manufacturer
+
+Model
+
+Serial Number
+
+Qualification status (IQ/OQ/PQ)
+
+Preventive maintenance frequency
+
+3️⃣ E-Log Book (Core Module)
+
+Select equipment
+
+Log activity:
+
+Start time
+
+End time
+
+Activity type
+
+Remarks
+
+Auto capture:
+
+User
+
+Date & Time
+
+Editable only before approval
+
+Mandatory reason for modification
+
+4️⃣ Preventive Maintenance (PM)
+
+Define PM schedules
+
+Auto-generate due alerts
+
+Log PM activities
+
+Attach documents
+
+PM status dashboard
+
+5️⃣ Audit Trail (Critical)
+
+Capture all:
+
+Create
+
+Update
+
+Delete
+
+Login / Logout
+
+Store:
+
+Old value
+
+New value
+
+User
+
+Timestamp
+
+Reason
+
+Read-only access
+
+Exportable for audit
+
+6️⃣ Approval Workflow
+
+Operator enters log
+
+Supervisor reviews
+
+QA approves/rejects
+
+Electronic signature mandatory
+
+Status:
+
+Draft
+
+Submitted
+
+Approved
+
+Rejected
+
+7️⃣ Reports & Exports
+
+Equipment log report
+
+User activity report
+
+PM compliance report
+
+Audit trail report
+
+Export formats:
+
+PDF
+
+Excel
+
+Filters by:
+
+Date
+
+Equipment
+
+User
+
+Status
+
+📊 Dashboard Requirements
+
+Today’s activities
+
+Pending approvals
+
+PM due / overdue
+
+Equipment usage summary
+
+Compliance indicators
+
+🧪 Validation & Quality
+
+Input validation
+
+Mandatory field checks
+
+Reason required for any change
+
+Configurable dropdowns (master driven)
+
+Exception handling with logs
+
+📁 Folder Structure (Backend)
+/Controllers
+/Services
+/Repositories
+/Models
+/DTOs
+/Middleware
+/Security
+/Audit
+
+📁 Folder Structure (Frontend)
+/components
+/pages
+/services
+/hooks
+/context
+/utils
+
+📈 MVP Scope (Phase-1)
+
+User login & roles
+
+Equipment master
+
+Manual log entry
+
+Audit trail
+
+Basic reports
+
+Dashboard
+
+🚀 Phase-2 Enhancements
+
+Mobile responsive UI
+
+Electronic batch records
+
+Instrument integration
+
+SOP document management
+
+Digital signatures with certificate
+
+Multi-plant support
+
+💰 Commercial Considerations
+
+One-time license (per plant / per server)
+
+Annual AMC
+
+Optional SaaS subscription
+
+Validation documentation as paid add-on
+
+📌 Development Expectations
+
+Clean, readable code
+
+Pharma-ready terminology
+
+Proper comments
+
+Config-driven behavior
+
+No hard-coded values
+
+Ready for validation documentation
+
+✅ Deliverables
+
+Source code
+
+Database schema
+
+Deployment guide
+
+User manual
+
+Admin manual
+
+Validation readiness checklist
+
+🚨 Important Instruction
+
+Develop this as a real production-ready pharma system, not a demo.
+Assume the software will be audited.

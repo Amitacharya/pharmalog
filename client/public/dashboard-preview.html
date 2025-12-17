@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Pharma E-Log Book</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        /* Simplified styles for preview */
+        :root {
+            --pharma-blue: #0d6efd;
+            --sidebar-width: 260px;
+            --header-height: 60px;
+        }
+        body { background-color: #f4f6f9; display: flex; min-height: 100vh; overflow-x: hidden; }
+        
+        #sidebar { min-width: var(--sidebar-width); background: #2c3e50; color: #fff; min-height: 100vh; }
+        #sidebar .sidebar-header { padding: 20px; background: #1a252f; }
+        #sidebar ul { list-style: none; padding: 20px 0; }
+        #sidebar ul li a { padding: 12px 20px; color: #bdc3c7; display: block; text-decoration: none; }
+        #sidebar ul li a:hover, #sidebar ul li a.active { color: #fff; background: #34495e; border-left: 4px solid var(--pharma-blue); }
+        
+        #content { width: 100%; display: flex; flex-direction: column; }
+        .main-header { height: var(--header-height); background: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #eee; }
+        .main-content { padding: 30px; }
+        
+        .card { border: none; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.03); margin-bottom: 24px; }
+        .stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+    </style>
+</head>
+<body>
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h4 class="mb-0">💊 PharmaLog</h4>
+            <small class="text-muted">GMP E-Log System</small>
+        </div>
+        <ul>
+            <li><a href="#" class="active"><i class="bi bi-speedometer2 me-2"></i> Dashboard</a></li>
+            <li><a href="#"><i class="bi bi-journal-text me-2"></i> E-Log Book</a></li>
+            <li><a href="#"><i class="bi bi-hdd-rack me-2"></i> Equipment Master</a></li>
+            <li><a href="#"><i class="bi bi-shield-check me-2"></i> Audit Trail</a></li>
+            <li><a href="#"><i class="bi bi-file-earmark-bar-graph me-2"></i> Reports</a></li>
+        </ul>
+    </nav>
+
+    <div id="content">
+        <header class="main-header">
+            <h5 class="mb-0 text-muted">Dashboard</h5>
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-dark" data-bs-toggle="dropdown">
+                    <img src="https://ui-avatars.com/api/?name=John+Doe&background=0d6efd&color=fff" width="32" height="32" class="rounded-circle me-2">
+                    <div class="d-none d-sm-block text-end">
+                        <div class="fw-bold small">John Doe</div>
+                        <div class="text-muted small" style="font-size: 0.75rem;">Operator</div>
+                    </div>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                    <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+                </ul>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="row g-4 mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card h-100 border-start border-4 border-primary">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-uppercase text-muted small fw-bold">Total Equipments</div>
+                                <div class="h3 mb-0 fw-bold">42</div>
+                            </div>
+                            <div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="bi bi-hdd-rack"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card h-100 border-start border-4 border-success">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-uppercase text-muted small fw-bold">Today's Logs</div>
+                                <div class="h3 mb-0 fw-bold">18</div>
+                            </div>
+                            <div class="stat-icon bg-success bg-opacity-10 text-success"><i class="bi bi-journal-check"></i></div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="col-xl-3 col-md-6">
+                    <div class="card h-100 border-start border-4 border-warning">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-uppercase text-muted small fw-bold">Pending Approvals</div>
+                                <div class="h3 mb-0 fw-bold">5</div>
+                            </div>
+                            <div class="stat-icon bg-warning bg-opacity-10 text-warning"><i class="bi bi-hourglass-split"></i></div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="col-xl-3 col-md-6">
+                    <div class="card h-100 border-start border-4 border-danger">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-uppercase text-muted small fw-bold">PM Overdue</div>
+                                <div class="h3 mb-0 fw-bold">2</div>
+                            </div>
+                            <div class="stat-icon bg-danger bg-opacity-10 text-danger"><i class="bi bi-exclamation-triangle"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent System Activities</h6>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr><th>Time</th><th>User</th><th>Action</th><th>Details</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>08:30 AM</td><td><strong>John Doe</strong></td><td>Log Entry Created</td><td>Bioreactor B-200 pH Check</td></tr>
+                            <tr><td>09:15 AM</td><td><strong>Sarah Smith</strong></td><td>Maintenance Started</td><td>Autoclave A-10 Routine Check</td></tr>
+                            <tr><td>10:00 AM</td><td><strong>Mike Ross</strong></td><td>Approval Granted</td><td>Batch Record #4421</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Auto Logout Logic
+        const INACTIVITY_LIMIT = 5 * 60 * 1000; 
+        let logoutTimer;
+        function resetTimer() {
+            clearTimeout(logoutTimer);
+            logoutTimer = setTimeout(logout, INACTIVITY_LIMIT);
+        }
+        function logout() {
+            alert("Session expired or logout requested.");
+            window.location.href = '/'; // Redirects back to index.html (Login)
+        }
+        window.onload = resetTimer;
+        document.onmousemove = resetTimer;
+        document.onkeypress = resetTimer;
+        document.onclick = resetTimer;
+    </script>
+</body>
+</html>

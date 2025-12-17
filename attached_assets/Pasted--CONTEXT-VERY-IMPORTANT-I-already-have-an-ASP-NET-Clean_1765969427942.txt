@@ -1,0 +1,286 @@
+🧠 CONTEXT (VERY IMPORTANT)
+
+I already have an ASP.NET Clean Architecture solution with the following structure:
+
+ELogBook.sln
+│
+├── ELogBook.API
+├── ELogBook.Application
+├── ELogBook.Domain
+├── ELogBook.Infrastructure
+└── ELogBook.WebUI
+
+
+I want you to focus ONLY on ELogBook.WebUI and generate ready-to-use HTML, CSS, JS, and Razor layout files that will work seamlessly with ASP.NET MVC / Razor Pages.
+
+⚠️ DO NOT mix backend logic or APIs
+⚠️ DO NOT write controllers or services
+⚠️ UI must be API-ready but API calls can be mocked
+
+🎯 OBJECTIVE
+
+Create a production-quality Pharma E-Log Book Web UI with:
+
+ASP.NET MVC / Razor-compatible structure
+
+Clean HTML + CSS + JavaScript
+
+Pharma-style professional UI
+
+Forms, tables, dashboards, layouts
+
+Easy integration with APIs later
+
+🛠 TECHNOLOGY REQUIREMENTS (STRICT)
+
+HTML5
+
+CSS3
+
+Bootstrap 5
+
+Vanilla JavaScript (no React, no Angular)
+
+Razor Layout support (_Layout.cshtml)
+
+Partial Views (_Sidebar.cshtml, _Header.cshtml)
+
+Compatible with ASP.NET Core MVC
+
+📁 REQUIRED FOLDER STRUCTURE (INSIDE ELogBook.WebUI)
+
+Generate files EXACTLY in this structure:
+
+ELogBook.WebUI
+│
+├── wwwroot
+│   ├── css
+│   │   └── site.css
+│   ├── js
+│   │   └── site.js
+│   └── images
+│
+├── Views
+│   ├── Shared
+│   │   ├── _Layout.cshtml
+│   │   ├── _Header.cshtml
+│   │   └── _Sidebar.cshtml
+│   │
+│   ├── Account
+│   │   └── Login.cshtml
+│   │
+│   ├── Dashboard
+│   │   └── Index.cshtml
+│   │
+│   ├── Equipment
+│   │   ├── Index.cshtml
+│   │   └── Create.cshtml
+│   │
+│   ├── LogBook
+│   │   ├── Index.cshtml
+│   │   └── Create.cshtml
+│   │
+│   ├── AuditTrail
+│   │   └── Index.cshtml
+│   │
+│   └── Reports
+│       └── Index.cshtml
+
+🧩 PAGE-BY-PAGE REQUIREMENTS
+1️⃣ _Layout.cshtml
+
+Bootstrap 5 included
+
+Header + Sidebar + Main Content
+
+Razor @RenderBody()
+
+Responsive layout
+
+Pharma professional theme
+
+2️⃣ Login Page (Account/Login.cshtml)
+
+Username
+
+Password
+
+Login button
+
+Validation placeholders
+
+No API call yet (mock submit)
+
+3️⃣ Dashboard (Dashboard/Index.cshtml)
+
+Summary cards:
+
+Total Equipments
+
+Today’s Logs
+
+Pending Approvals
+
+PM Due
+
+Table: Recent Activities
+
+Placeholder JavaScript data
+
+4️⃣ Equipment Master
+
+List (Equipment/Index.cshtml)
+
+Table:
+
+Equipment ID
+
+Name
+
+Type
+
+Location
+
+Status
+
+Add / Edit buttons (UI only)
+
+Create (Equipment/Create.cshtml)
+
+Equipment Name
+
+Equipment Type
+
+Location
+
+Manufacturer
+
+Model
+
+Save button
+
+5️⃣ Log Book
+
+List (LogBook/Index.cshtml)
+
+Equipment
+
+Start Time
+
+End Time
+
+Activity
+
+Status
+
+Create (LogBook/Create.cshtml)
+
+Equipment dropdown
+
+Activity description
+
+Start time
+
+End time
+
+Remarks
+
+Submit button
+
+6️⃣ Audit Trail (AuditTrail/Index.cshtml)
+
+Read-only table
+
+Columns:
+
+Date
+
+User
+
+Action
+
+Old Value
+
+New Value
+
+Reason
+
+7️⃣ Reports (Reports/Index.cshtml)
+
+Filters:
+
+Date range
+
+Equipment
+
+Export buttons:
+
+PDF (UI only)
+
+Excel (UI only)
+
+🎨 UI DESIGN RULES
+
+Use Bootstrap cards, tables, forms
+
+Pharma clean look (light colors, minimal icons)
+
+No flashy animations
+
+Focus on readability & audit clarity
+
+🧠 JAVASCRIPT RULES
+
+All JS goes into wwwroot/js/site.js
+
+Use dummy JSON data
+
+Structure JS functions as if APIs exist
+
+Example:
+
+loadEquipmentList();
+submitLogEntry();
+
+📌 IMPORTANT INSTRUCTIONS
+
+Generate actual file contents, not pseudo-code
+
+Each file must be ready to run
+
+Use Razor syntax where required
+
+Add comments explaining:
+
+Purpose of file
+
+Where API will be connected later
+
+Assume this will be used in a GMP audited system
+
+🚀 FINAL EXPECTATION
+
+When done:
+
+I should be able to open ELogBook.WebUI
+
+Run the app
+
+Navigate UI fully
+
+Later connect APIs from ELogBook.API without changing UI
+
+❗ DO NOT
+
+Do not generate backend logic
+
+Do not use React / Angular
+
+Do not skip files
+
+Do not oversimplify UI
+
+✅ START NOW
+
+Generate all files step-by-step and clearly mention:
+File Name → File Path → Full Content

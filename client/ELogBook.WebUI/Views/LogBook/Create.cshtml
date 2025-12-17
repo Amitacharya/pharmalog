@@ -1,0 +1,80 @@
+@{
+    ViewData["Title"] = "New Log Entry";
+}
+
+<div class="d-flex align-items-center mb-4">
+    <a href="/LogBook/Index" class="btn btn-outline-secondary btn-sm me-3">
+        <i class="bi bi-arrow-left"></i> Back
+    </a>
+    <h2 class="h4 mb-0">New Log Entry</h2>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-top border-4 border-primary">
+            <div class="card-header bg-white">
+                <h6 class="mb-0">Activity Details</h6>
+            </div>
+            <div class="card-body">
+                <form onsubmit="handleFormSubmit(event, '/LogBook/Index')">
+                    
+                    <div class="mb-4">
+                        <label for="equipmentSelect" class="form-label required-field">Select Equipment</label>
+                        <select class="form-select form-select-lg" id="equipmentSelect" required>
+                            <option value="" selected disabled>Choose equipment...</option>
+                            <option value="1">Bioreactor B-200 (Zone A)</option>
+                            <option value="2">Autoclave A-10 (Zone B)</option>
+                            <option value="3">HPLC System 04 (QC Lab)</option>
+                        </select>
+                        <div class="form-text">Ensure you select the correct asset ID before proceeding.</div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="activityType" class="form-label required-field">Activity Type</label>
+                            <select class="form-select" id="activityType" required>
+                                <option value="Operation">Operation / Usage</option>
+                                <option value="Maintenance">Maintenance</option>
+                                <option value="Calibration">Calibration</option>
+                                <option value="Cleaning">Cleaning</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="batchNo" class="form-label">Batch No. (If applicable)</label>
+                            <input type="text" class="form-control" id="batchNo">
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="startTime" class="form-label required-field">Start Time</label>
+                            <input type="datetime-local" class="form-control" id="startTime" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="endTime" class="form-label">End Time</label>
+                            <input type="datetime-local" class="form-control" id="endTime">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="remarks" class="form-label required-field">Description / Remarks</label>
+                        <textarea class="form-control" id="remarks" rows="4" placeholder="Enter detailed observations, readings, or notes..." required></textarea>
+                    </div>
+
+                    <div class="alert alert-secondary d-flex align-items-center" role="alert">
+                        <i class="bi bi-info-circle me-3 fs-4"></i>
+                        <div>
+                            By submitting this entry, you are applying your electronic signature.
+                            <div class="fw-bold mt-1">Logged in as: John Doe (Operator)</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="/LogBook/Index" class="btn btn-light">Cancel</a>
+                        <button type="submit" class="btn btn-primary px-4">Sign & Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

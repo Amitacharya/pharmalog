@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Pharma E-Log Book</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar Partial -->
+        <partial name="_Sidebar" />
+
+        <!-- Main Content Area -->
+        <div id="content">
+            <!-- Header Partial -->
+            <partial name="_Header" />
+
+            <!-- Page Content -->
+            <main class="main-content">
+                @RenderBody()
+            </main>
+
+            <!-- Footer -->
+            <footer class="bg-white border-top py-3 px-4 mt-auto">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-muted small">
+                        &copy; @DateTime.Now.Year - Pharma E-Log Book System (v1.0)
+                    </div>
+                    <div class="col-md-6 text-end small text-muted">
+                        <span class="me-3">21 CFR Part 11 Compliant</span>
+                        <span>Server Time: @DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm") UTC</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
