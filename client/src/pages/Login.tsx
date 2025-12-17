@@ -166,9 +166,6 @@ export default function Login() {
             <p className="text-xs text-slate-400">
               21 CFR Part 11 Compliant | Audit Trail Enabled
             </p>
-            <p className="text-xs text-slate-400">
-              5-minute inactivity timeout for security
-            </p>
             <p className="text-xs text-slate-500 lg:hidden mt-4">
               Powered by <span className="text-blue-600 font-medium">Acharya Infosystems LLP</span>
             </p>
