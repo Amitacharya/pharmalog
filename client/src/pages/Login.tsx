@@ -5,12 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Checkbox } from "@/components/ui/checkbox";
 import { AlertCircle, Shield, Lock, Activity } from "lucide-react";
 import logo from "@assets/generated_images/minimalist_pharma_logo_symbol.png";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
@@ -21,7 +23,7 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      await login(username, password);
+      await login(username, password, rememberMe);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
@@ -72,8 +74,13 @@ export default function Login() {
           </div>
         </div>
 
-        <div className="text-sm text-slate-500">
-          GAMP-5 Validated • ALCOA+ Principles • Data Integrity Assured
+        <div className="space-y-2">
+          <p className="text-sm text-slate-500">
+            GAMP-5 Validated | ALCOA+ Principles | Data Integrity Assured
+          </p>
+          <p className="text-sm text-slate-400">
+            Powered by <span className="text-blue-400 font-medium">Acharya Infosystems LLP</span>
+          </p>
         </div>
       </div>
 
@@ -131,6 +138,18 @@ export default function Login() {
                   />
                 </div>
 
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="remember"
+                    data-testid="checkbox-remember"
+                    checked={rememberMe}
+                    onCheckedChange={(checked) => setRememberMe(checked === true)}
+                  />
+                  <Label htmlFor="remember" className="text-sm text-slate-600 cursor-pointer">
+                    Remember me on this device
+                  </Label>
+                </div>
+
                 <Button
                   type="submit"
                   data-testid="button-login"
@@ -140,22 +159,18 @@ export default function Login() {
                   {isLoading ? "Signing in..." : "Sign In"}
                 </Button>
               </form>
-
-              <div className="mt-6 pt-6 border-t">
-                <div className="text-center text-sm text-slate-500">
-                  <p className="mb-2">Demo Credentials</p>
-                  <code className="bg-slate-100 px-2 py-1 rounded text-xs">admin / admin</code>
-                </div>
-              </div>
             </CardContent>
           </Card>
 
           <div className="text-center mt-6 space-y-2">
             <p className="text-xs text-slate-400">
-              21 CFR Part 11 Compliant • Audit Trail Enabled
+              21 CFR Part 11 Compliant | Audit Trail Enabled
             </p>
             <p className="text-xs text-slate-400">
-              5-minute auto-logout for security
+              5-minute inactivity timeout for security
+            </p>
+            <p className="text-xs text-slate-500 lg:hidden mt-4">
+              Powered by <span className="text-blue-600 font-medium">Acharya Infosystems LLP</span>
             </p>
           </div>
         </div>

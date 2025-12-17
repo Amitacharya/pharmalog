@@ -83,7 +83,7 @@ export async function registerRoutes(
   // Login
   app.post("/api/auth/login", async (req, res) => {
     try {
-      const { username, password } = req.body;
+      const { username, password, rememberMe } = req.body;
       
       if (!username || !password) {
         return res.status(400).json({ error: "Username and password required" });
@@ -106,6 +106,11 @@ export async function registerRoutes(
       req.session.userId = user.id;
       req.session.username = user.username;
       req.session.role = user.role;
+
+      // Extend session if "Remember Me" is checked (7 days instead of 24 hours)
+      if (rememberMe) {
+        req.session.cookie.maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days
+      }
 
       await logAudit(user.id, "LOGIN", "User");
 
